@@ -37,3 +37,25 @@ document.getElementById('close-market').addEventListener('click', () => {
 // --- Simulan ang Laro ---
 Economy.init();
 Animals.render();
+// --- Sell Button ---
+document.getElementById('sell-btn').addEventListener('click', () => {
+  // Ipakita lang muna ang mga pwede ibenta
+  const ready = Animals.list.filter(a => a.readyToSell);
+  if (ready.length === 0) {
+    alert('Wala pang hayop na pwedeng ibenta!');
+  } else {
+    const names = ready.map(a => `${a.emoji} ${a.name} — ₱${a.sellPrice}`).join('\n');
+    alert('Mga pwedeng ibenta:\n\n' + names);
+  }
+});
+
+// --- Stats Button ---
+document.getElementById('stats-btn').addEventListener('click', () => {
+  const total = Animals.list.length;
+  const withPest = Animals.list.filter(a => a.hasPest).length;
+  alert(`📊 Zoo Stats:
+- Kabuuan ng hayop: ${total}
+- May peste: ${withPest}
+- Walang peste: ${total - withPest}
+- Pera: ₱${Economy.money}`);
+});

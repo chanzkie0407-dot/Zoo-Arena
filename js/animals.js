@@ -2,33 +2,40 @@ const Animals = {
   list: [],
 
   render() {
-    const container = document.getElementById('animals-container');
+    // ✅ TAMA: "zoo-area" — ito ang nasa HTML mo
+    const container = document.getElementById('zoo-area');
     if (!container) return;
     container.innerHTML = '';
 
     this.list.forEach(animal => {
       container.innerHTML += `
-        <div class="animal-card" style="border:1px solid #ccc; padding:12px; margin:8px; border-radius:8px;">
-          <h4>${animal.emoji} ${animal.name}</h4>
-          <p>Health: ${animal.health}/100</p>
-          <p>Age: ${animal.age} days</p>
-          ${animal.readyToSell ? `<p style="color:green">✅ Pwede nang ibenta — ₱${animal.sellPrice}</p>` : ''}
+        <div style="border:2px solid #8b5a2b; padding:15px; margin:10px; border-radius:10px; background:#fff;">
+          <h3 style="margin:0 0 8px 0;">${animal.emoji} ${animal.name}</h3>
+          <p>❤️ Health: ${animal.health}/100</p>
+          <p>📅 Age: ${animal.age} days</p>
+          ${animal.readyToSell ? `<p style="color:green; font-weight:bold;">✅ Pwede nang ibenta — ₱${animal.sellPrice}</p>` : ''}
           
-          <!-- ✅ Peste Warning + Insect Emojis DITO -->
-          ${animal.hasPest ? `<div style="color:red; font-size:12px; margin:4px 0;">⚠️ May peste! Tanggalin mo!</div>` : ''}
-          <div class="insects-here">
+          <!-- Peste Warning + Insects -->
+          ${animal.hasPest ? `<div style="color:red; font-weight:bold; margin:6px 0;">⚠️ MAY PESTE!</div>` : ''}
+          <div style="font-size:22px; margin:8px 0;">
             ${Insects.active.filter(i => i.animalId === animal.id).map(i => 
-              `<span class="insect" data-id="${i.id}" style="cursor:pointer; font-size:18px; margin:0 2px;">${i.emoji}</span>`
+              `<span class="insect" data-id="${i.id}" style="cursor:pointer; padding:4px;">${i.emoji}</span>`
             ).join('')}
           </div>
           
-          <button onclick="Animals.feed('${animal.id}')">Pakainin</button>
-          ${animal.readyToSell ? `<button onclick="Economy.sellAnimal(Animals.list.find(a=>a.id==='${animal.id}'))">Ibenta</button>` : ''}
+          <button onclick="Animals.feed('${animal.id}')" style="padding:8px 16px; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;">
+            🍖 Pakainin
+          </button>
+          ${animal.readyToSell ? `
+            <button onclick="Economy.sellAnimal(Animals.list.find(a=>a.id==='${animal.id}'))" style="padding:8px 16px; background:#2196F3; color:white; border:none; border-radius:5px; cursor:pointer; margin-left:8px;">
+              💵 Ibenta
+            </button>
+          ` : ''}
         </div>
       `;
     });
 
-    // Click events sa mga insekto
+    // Click sa mga insekto
     document.querySelectorAll('.insect').forEach(el => {
       el.addEventListener('click', (e) => {
         const id = e.target.dataset.id;
@@ -44,6 +51,4 @@ const Animals = {
       this.render();
     }
   }
-
-  // Ibalik dito ang IBA PANG functions mo (add, grow, checkReady, etc.)
 };

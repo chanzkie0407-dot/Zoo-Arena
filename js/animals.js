@@ -9,7 +9,10 @@ const Animals = {
     this.list.forEach(animal => {
       container.innerHTML += `
         <div style="border:2px solid #8b5a2b; padding:15px; margin:10px; border-radius:10px; background:#fff;">
-          <h3 style="margin:0 0 8px 0;">${animal.emoji} ${animal.name}</h3>
+          <h3 style="margin:0 0 8px 0;">
+            <span class="animal-emoji ${animal.moveType || 'walk'}">${animal.emoji}</span>
+            ${animal.name}
+          </h3>
           <p>❤️ Health: ${animal.health}/100</p>
           <p>📅 Age: ${animal.age} days</p>
           ${animal.readyToSell ? `<p style="color:green; font-weight:bold;">✅ Pwede nang ibenta — ₱${animal.sellPrice}</p>` : ''}

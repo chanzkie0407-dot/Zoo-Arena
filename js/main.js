@@ -10,7 +10,8 @@ function initAnimals() {
         age: 2,
         hasPest: false,
         readyToSell: false,
-        sellPrice: 150
+        sellPrice: 150,
+        moveType: 'walk' // naglalakad pakaliwa-pakanan
       },
       {
         id: 'elephant-1',
@@ -20,7 +21,52 @@ function initAnimals() {
         age: 4,
         hasPest: false,
         readyToSell: true,
-        sellPrice: 300
+        sellPrice: 300,
+        moveType: 'walk'
+      },
+      {
+        id: 'fish-1',
+        name: 'Golden Fish',
+        emoji: '🐟',
+        health: 85,
+        age: 1,
+        hasPest: false,
+        readyToSell: false,
+        sellPrice: 120,
+        moveType: 'swim' // lumalangoy pataas-pababa
+      },
+      {
+        id: 'bird-1',
+        name: 'Parrot',
+        emoji: '🦜',
+        health: 80,
+        age: 3,
+        hasPest: false,
+        readyToSell: false,
+        sellPrice: 180,
+        moveType: 'float' // lumulutang pataas-pababa
+      },
+      {
+        id: 'cow-1',
+        name: 'Cow',
+        emoji: '🐄',
+        health: 95,
+        age: 2,
+        hasPest: false,
+        readyToSell: false,
+        sellPrice: 200,
+        moveType: 'walk'
+      },
+      {
+        id: 'dolphin-1',
+        name: 'Dolphin',
+        emoji: '🐬',
+        health: 88,
+        age: 3,
+        hasPest: false,
+        readyToSell: true,
+        sellPrice: 350,
+        moveType: 'swim'
       }
     ];
   }
@@ -63,20 +109,16 @@ document.getElementById('stats-btn').addEventListener('click', () => {
 - Pera: ₱${Economy.money}`);
 });
 
-// --- PESTE SYSTEM — KUSANG LUMALABAS ---
+// --- PESTE SYSTEM ---
 function spawnRandomPest() {
   const safeAnimals = Animals.list.filter(a => !a.hasPest);
   if (safeAnimals.length === 0) return;
-
   const randomAnimal = safeAnimals[Math.floor(Math.random() * safeAnimals.length)];
-  const pestCount = Math.floor(Math.random() * 3) + 1; // 1 hanggang 3
+  const pestCount = Math.floor(Math.random() * 3) + 1;
   Insects.spawn(randomAnimal.id, pestCount);
 }
 
-// Unang peste — lalabas 3 segundo pagkabukas
 setTimeout(spawnRandomPest, 3000);
-
-// Kasunod — bawat 20 segundo
 setInterval(spawnRandomPest, 20000);
 
 // --- Simulan ang Laro ---

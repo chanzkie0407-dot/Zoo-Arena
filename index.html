@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoo Arena 🦁</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Top Bar -->
+    <header>
+      <div class="stat">💰 Money: <span id="money">0</span></div>
+      <div class="stat">📅 Day: <span id="day">1</span></div>
+      <div class="stat">🎯 Goal: <span id="goal">0/5</span></div>
+      <button id="rest-btn" class="hidden">🌙 Rest</button>
+    </header>
+
+    <!-- Wave Alert -->
+    <div id="wave-alert" class="hidden">
+      <h2 id="wave-title"></h2>
+      <p id="wave-desc"></p>
+    </div>
+
+    <!-- Zoo Area -->
+    <main id="zoo-area"></main>
+
+    <!-- Bottom Bar -->
+    <footer>
+      <button id="market-btn">🛒 Market</button>
+      <button id="sell-btn">💵 Sell</button>
+      <button id="stats-btn">📊 Stats</button>
+    </footer>
+
+    <!-- Camera Preview -->
+    <div id="camera-modal" class="hidden">
+      <div class="camera-content">
+        <video id="camera-feed" autoplay playsinline></video>
+        <canvas id="photo-canvas"></canvas>
+        <div id="photo-frame"></div>
+        <button id="save-photo">💾 Save</button>
+        <button id="close-camera">✕</button>
+      </div>
+    </div>
+
+    <!-- Market Modal -->
+    <div id="market-modal" class="hidden">
+      <h2>🛒 Market</h2>
+      <div id="market-items"></div>
+      <button id="close-market">✕ Close</button>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/economy.js"></script>
+  <script src="js/animals.js"></script>
+  <script src="js/insects.js"></script>
+  <script src="js/waves.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

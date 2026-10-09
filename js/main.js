@@ -1,48 +1,39 @@
-const Main = {
-  loopRunning: false,
+// --- Magdagdag ng Halimbawang Hayop para may makita agad ---
+if (Animals.list.length === 0) {
+  Animals.list = [
+    {
+      id: 'zebra-1',
+      name: 'Zebra',
+      emoji: '🦓',
+      health: 90,
+      age: 2,
+      hasPest: false,
+      readyToSell: false,
+      sellPrice: 150
+    },
+    {
+      id: 'elephant-1',
+      name: 'Elephant',
+      emoji: '🐘',
+      health: 75,
+      age: 4,
+      hasPest: false,
+      readyToSell: true,
+      sellPrice: 300
+    }
+  ];
+}
 
-  init() {
-    Economy.init();
-    Animals.init();
-    
-    // Game loop — every second
-    this.loopRunning = true;
-    setInterval(() => {
-      if (!this.loopRunning) return;
-      Animals.tickSecond();
-      Waves.triggerRandom();
-      
-      // Random insects
-      if (Math.random() < 0.08 && Animals.list.length > 0) {
-        const randomAnimal = Animals.list[Math.floor(Math.random() * Animals.list.length)];
-        Insects.spawn(randomAnimal.id);
-      }
-    }, 1000);
-    
-    // Rest button
-    document.getElementById('rest-btn').addEventListener('click', () => this.endDay());
-    
-    // Market
-    document.getElementById('market-btn').addEventListener('click', () => {
-      document.getElementById('market-modal').classList.remove('hidden');
-    });
-    document.getElementById('close-market').addEventListener('click', () => {
-      document.getElementById('market-modal').classList.add('hidden');
-    });
-  },
+// --- Bukas/Sara ng Market Modal ---
+document.getElementById('market-btn').addEventListener('click', () => {
+  document.getElementById('market-modal').classList.remove('hidden');
+  Economy.renderMarket();
+});
 
-  endDay() {
-    this.loopRunning = false;
-    Camera.takePhoto('win');
-    
-    setTimeout(() => {
-      Economy.nextDay();
-      Animals.resetForNewDay();
-      Insects.clearAll();
-      this.loopRunning = true;
-    }, 2500);
-  }
-};
+document.getElementById('close-market').addEventListener('click', () => {
+  document.getElementById('market-modal').classList.add('hidden');
+});
 
-// Start game!
-document.addEventListener('DOMContentLoaded', () => Main.init());
+// --- Simulan ang Laro ---
+Economy.init();
+Animals.render();

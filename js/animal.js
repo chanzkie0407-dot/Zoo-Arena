@@ -1,140 +1,86 @@
-const Animals = {
-  list: [],
-  types: [
-    { id: 'rabbit', emoji: '🐇', name: 'Rabbit', food: 'carrots', sellPrice: 50 },
-    { id: 'deer', emoji: '🦌', name: 'Deer', food: 'fruit', sellPrice: 80 },
-    { id: 'bird', emoji: '🐦', name: 'Bird', food: 'seeds', sellPrice: 40 },
-    { id: 'monkey', emoji: '🐒', name: 'Monkey', food: 'fruit', sellPrice: 100 },
-    { id: 'bear', emoji: '🐻', name: 'Bear', food: 'meat', sellPrice: 200 }
+const Economy = {
+  money: Storage.load('money', 100),
+  day: Storage.load('day', 1),
+  
+  marketItems: [
+    { id: 'carrots', name: '🥕 Carrots', price: 10, stock: 10 },
+    { id: 'seeds', name: '🌾 Seeds', price: 8, stock: 10 },
+    { id: 'meat', name: '🥩 Meat', price: 25, stock: 5 },
+    { id: 'fruit', name: '🍌 Fruits', price: 12, stock: 10 },
+    { id: 'repellent', name: '🧴 Pest Repellent', price: 30, stock: 3 }
   ],
-  goalTarget: 5,
-  caredToday: 0,
 
   init() {
-    this.spawnNew(3); // Start with 3 animals
-    this.updateGoalUI();
+    this.updateUI();
+    this.renderMarket(); // ✅ Ipinakita agad ang market kapag nag-start
   },
 
-  spawnNew(count) {
-    for (let i = 0; i < count; i++) {
-      const type = this.types[Math.floor(Math.random() * this.types.length)];
-      const animal = {
-        id: Date.now() + Math.random(),
-        ...type,
-        timeLeft: 120, // 2 minutes in seconds
-        fed: false,
-        watered: false,
-        happy: true,
-        readyToSell: false,
-        hasPest: false
-      };
-      this.list.push(animal);
+  earn(amount) {
+    this.money += amount;
+    Storage.save('money', this.money);
+    this.updateUI();
+  },
+
+  spend(amount) {
+    if (this.money >= amount) {
+      this.money -= amount;
+      Storage.save('money', this.money);
+      this.updateUI();
+      return true;
     }
-    this.render();
+    return false;
   },
 
-  tickSecond() {
-    this.list.forEach((animal, index) => {
-      if (animal.timeLeft > 0) {
-        const penalty = animal.hasPest ? 2 : 1; // Faster timer if pests!
-        animal.timeLeft -= penalty;
-        
-        if (animal.fed && animal.watered) {
-          this.completeCare(animal, index);
-        } else if (animal.timeLeft <= 0) {
-          this.loseAnimal(index);
-        }
-      }
-    });
-    this.render();
-  },
-
-  feed(animalId) {
-    const animal = this.list.find(a => a.id === animalId);
-    if (animal && !animal.fed) {
-      animal.fed = true;
-      this.checkReady(animal);
-      this.render();
+  buyItem(index) {
+    const item = this.marketItems[index];
+    if (item.stock > 0 && this.spend(item.price)) {
+      item.stock--;
+      this.renderMarket(); // ✅ I-refresh ang stock display pagkatapos bumili
+      return true;
     }
+    alert('Hindi mabili — kulang sa pera o ubos na ang stock!');
+    return false;
   },
 
-  water(animalId) {
-    const animal = this.list.find(a => a.id === animalId);
-    if (animal && !animal.watered) {
-      animal.watered = true;
-      this.checkReady(animal);
-      this.render();
+  sellAnimal(animal) {
+    if (animal.readyToSell) {
+      const price = animal.sellPrice;
+      this.earn(price);
+      return true;
     }
+    return false;
   },
 
-  checkReady(animal) {
-    if (animal.fed && animal.watered && animal.timeLeft > 0) {
-      animal.readyToSell = true;
-      animal.timeLeft = 120; // Reset timer
-      Economy.earn(15);
-      this.caredToday++;
-      this.updateGoalUI();
-    }
+  nextDay() {
+    this.day++;
+    Storage.save('day', this.day);
+    this.updateUI();
   },
 
-  completeCare(animal, index) {
-    // Already reset & rewarded
+  updateUI() {
+    document.getElementById('money').textContent = this.money;
+    document.getElementById('day').textContent = this.day;
   },
 
-  loseAnimal(index) {
-    this.list.splice(index, 1);
-    Camera.takePhoto('fail');
-  },
-
-  updateGoalUI() {
-    document.getElementById('goal').textContent = `${this.caredToday}/${this.goalTarget}`;
-    if (this.caredToday >= this.goalTarget) {
-      document.getElementById('rest-btn').classList.remove('hidden');
-    }
-  },
-
-  render() {
-    const container = document.getElementById('zoo-area');
+  renderMarket() {
+    const container = document.getElementById('market-items');
     container.innerHTML = '';
     
-    this.list.forEach(animal => {
-      const mins = Math.floor(animal.timeLeft / 60);
-      const secs = Math.floor(animal.timeLeft % 60);
-      let timeClass = 'green';
-      if (animal.timeLeft <= 30) timeClass = 'red';
-      else if (animal.timeLeft <= 60) timeClass = 'yellow';
-      
-      const card = document.createElement('div');
-      card.className = `animal-card ${timeClass === 'red' ? 'urgent' : ''}`;
-      ${animal.hasPest ? `<div style="color:red; font-size:12px; margin:4px 0;">⚠️ May peste! Tanggalin mo!</div>` : ''}
-<div class="insects-here">
-  ${Insects.active.filter(i => i.animalId === animal.id).map(i => 
-    `<span class="insect" data-id="${i.id}">${i.emoji}</span>`
-  ).join('')}
-</div>
-      card.innerHTML = `
-        <div style="font-size:28px">${animal.emoji} ${animal.name}</div>
-        <div class="timer ${timeClass}">⏱️ ${mins}:${secs.toString().padStart(2,'0')}</div>
-        <div class="needs">
-          <button class="need-btn ${animal.fed ? 'done' : ''}" onclick="Animals.feed(${animal.id})">
-            ${animal.fed ? '✅' : '🍽️'} Feed
-          </button>
-          <button class="need-btn ${animal.watered ? 'done' : ''}" onclick="Animals.water(${animal.id})">
-            ${animal.watered ? '✅' : '💧'} Water
+    this.marketItems.forEach((item, index) => {
+      const isOutOfStock = item.stock <= 0;
+      container.innerHTML += `
+        <div style="padding:8px; border-bottom:1px solid #ddd; display:flex; justify-content:space-between; align-items:center;">
+          <span>${item.name} — ₱${item.price} (Stock: ${item.stock})</span>
+          <button onclick="Economy.buyItem(${index}); this.disabled=true; setTimeout(()=>this.disabled=false, 100);" 
+            style="padding:6px 12px; background:${isOutOfStock ? '#ccc' : '#4CAF50'}; color:white; border:none; border-radius:4px; ${isOutOfStock ? 'opacity:0.5; cursor:not-allowed;' : ''}"
+            ${isOutOfStock ? 'disabled' : ''}>
+            ${isOutOfStock ? 'Ubos na' : 'Buy'}
           </button>
         </div>
-        ${animal.readyToSell ? `<button style="background:#ffc100; border:none; padding:6px; border-radius:6px; margin-top:5px" onclick="Economy.sellAnimal(Animals.list.find(a=>a.id===${animal.id}))">💰 Sell for ₱${animal.sellPrice}</button>` : ''}
-        ${animal.hasPest ? '<div style="color:red; font-size:12px">⚠️ Pests nearby! Clear fast!</div>' : ''}
       `;
-      container.appendChild(card);
     });
-  },
-
-  resetForNewDay() {
-    this.caredToday = 0;
-    this.list = [];
-    this.spawnNew(3);
-    this.updateGoalUI();
-    document.getElementById('rest-btn').classList.add('hidden');
   }
 };
+
+// Simula ng laro
+Economy.init();

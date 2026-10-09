@@ -58,4 +58,21 @@ const Economy = {
     document.getElementById('money').textContent = this.money;
     document.getElementById('day').textContent = this.day;
   }
+  renderMarket() {
+  const container = document.getElementById('market-items');
+  container.innerHTML = '';
+  
+  this.marketItems.forEach((item, index) => {
+    container.innerHTML += `
+      <div style="padding:8px; border-bottom:1px solid #ddd; display:flex; justify-content:space-between; align-items:center;">
+        <span>${item.name} — ₱${item.price} (Stock: ${item.stock})</span>
+        <button onclick="Economy.buyItem(${index}); this.disabled=true; setTimeout(()=>this.disabled=false, 100);" 
+          style="padding:6px 12px; background:#4CAF50; color:white; border:none; border-radius:4px;"
+          ${item.stock <= 0 ? 'disabled style="opacity:0.5"' : ''}>
+          Buy
+        </button>
+      </div>
+    `;
+  });
+},
 };

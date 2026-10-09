@@ -22,7 +22,7 @@ const Insects = {
     if (idx > -1) {
       const insect = this.active[idx];
       this.active.splice(idx, 1);
-      Economy.earn(3); // ₱3 bawat tinanggal ✅
+      Economy.earn(3);
       
       const stillHas = this.active.some(i => i.animalId === insect.animalId);
       if (!stillHas) {

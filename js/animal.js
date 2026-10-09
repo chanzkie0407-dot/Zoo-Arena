@@ -106,6 +106,12 @@ const Animals = {
       
       const card = document.createElement('div');
       card.className = `animal-card ${timeClass === 'red' ? 'urgent' : ''}`;
+      ${animal.hasPest ? `<div style="color:red; font-size:12px; margin:4px 0;">⚠️ May peste! Tanggalin mo!</div>` : ''}
+<div class="insects-here">
+  ${Insects.active.filter(i => i.animalId === animal.id).map(i => 
+    `<span class="insect" data-id="${i.id}">${i.emoji}</span>`
+  ).join('')}
+</div>
       card.innerHTML = `
         <div style="font-size:28px">${animal.emoji} ${animal.name}</div>
         <div class="timer ${timeClass}">⏱️ ${mins}:${secs.toString().padStart(2,'0')}</div>

@@ -15,23 +15,19 @@
       <div class="stat">🎯 Goal: <span id="goal">0/5</span></div>
       <button id="rest-btn" class="hidden">🌙 Rest</button>
     </header>
-
     <!-- Wave Alert -->
     <div id="wave-alert" class="hidden">
       <h2 id="wave-title"></h2>
       <p id="wave-desc"></p>
     </div>
-
     <!-- Zoo Area -->
     <main id="zoo-area"></main>
-
     <!-- Bottom Bar -->
     <footer>
       <button id="market-btn">🛒 Market</button>
       <button id="sell-btn">💵 Sell</button>
       <button id="stats-btn">📊 Stats</button>
     </footer>
-
     <!-- Camera Preview -->
     <div id="camera-modal" class="hidden">
       <div class="camera-content">
@@ -42,7 +38,6 @@
         <button id="close-camera">✕</button>
       </div>
     </div>
-
     <!-- Market Modal -->
     <div id="market-modal" class="hidden">
       <h2>🛒 Market</h2>
@@ -51,12 +46,19 @@
     </div>
   </div>
 
+  <!-- ✅ TAMANG PAGKAKASUNOD NG SCRIPTS — HUWAG BAGUHIN -->
   <script src="js/storage.js"></script>
-  <script src="js/economy.js"></script>
-  <script src="js/animals.js"></script>
-  <script src="js/insects.js"></script>
+  <script src="js/animals.js"></script>   <!-- Una — kilala ng Insects & Economy -->
+  <script src="js/insects.js"></script>  <!-- Sunod — kailangan ng Animals -->
+  <script src="js/economy.js"></script>  <!-- Kailangan pareho ng Animals & Insects -->
   <script src="js/waves.js"></script>
   <script src="js/camera.js"></script>
   <script src="js/main.js"></script>
+
+  <!-- ✅ Simulan ang laro pagkatapos mag-load lahat -->
+  <script>
+    Economy.init();
+    Animals.render();
+  </script>
 </body>
 </html>

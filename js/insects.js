@@ -18,11 +18,11 @@ const Insects = {
   },
 
   clear(insectId) {
-    const idx = this.active.findIndex(i => i.id === insectId);
+    const idx = this.active.findIndex(i => String(i.id) === String(insectId));
     if (idx > -1) {
       const insect = this.active[idx];
       this.active.splice(idx, 1);
-      Economy.earn(3);
+      Economy.earn(3); // ₱3 bawat tinanggal ✅
       
       const stillHas = this.active.some(i => i.animalId === insect.animalId);
       if (!stillHas) {
@@ -43,15 +43,6 @@ const Insects = {
   },
 
   render() {
-    // Re-render animals to show pest status
     Animals.render();
-    
-    // Add insect click events
-    document.querySelectorAll('.insect').forEach(el => {
-      el.addEventListener('click', (e) => {
-        const id = parseFloat(e.target.dataset.id);
-        this.clear(id);
-      });
-    });
   }
 };

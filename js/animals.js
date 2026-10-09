@@ -1,3 +1,6 @@
+const Animals = {
+  list: [],
+
   render() {
     const container = document.getElementById('zoo-area');
     if (!container) return;
@@ -37,3 +40,12 @@
       });
     });
   },
+
+  feed(id) {
+    const animal = this.list.find(a => a.id === id);
+    if (animal) {
+      animal.health = Math.min(100, animal.health + 15);
+      this.render();
+    }
+  }
+};
